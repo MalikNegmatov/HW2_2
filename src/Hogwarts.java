@@ -1,6 +1,6 @@
 import java.util.Objects;
 
-public class Hogwarts {
+public abstract class Hogwarts {
     private String name;
     private String surname;
     private int magicLevel;
@@ -25,6 +25,25 @@ public class Hogwarts {
         this.trLevel = trLevel;
     }
 
+    public void compareWith(Hogwarts student) {
+        if (getMagicLevel() > student.getMagicLevel()) {
+            System.out.println(getName() + " имеет силу магии больше, чем у " + student.getName());
+        } else if (getMagicLevel() == student.getMagicLevel()) {
+            System.out.println("Уровень равен ");
+        } else {
+            System.out.println(student.getName() + " имеет силу магии больше, чем у" + getName());
+        }
+
+        if (getTrLevel() > student.getTrLevel()) {
+            System.out.println(getName() + " диссипирует на большее расстояние, чем " + student.getName());
+        } else if (getMagicLevel() == student.getMagicLevel()) {
+            System.out.println("размер ЧСП равен ");
+        } else {
+            System.out.println(student.getName() + " камингаутерит чаще, чем " + getName());
+        }
+
+    }
+    
     public String getName() {
         return name;
     }
