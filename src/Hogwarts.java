@@ -2,7 +2,6 @@ import java.util.Objects;
 
 public abstract class Hogwarts {
     private String name;
-    private String surname;
     private int magicLevel;
     private int trLevel;
 
@@ -14,87 +13,65 @@ public abstract class Hogwarts {
 
     /** Конструктор объекта с описанием свойств, присущих всем ученикам школы Хогвартс
      * @param name         --  имя ученика
-     * @param surname      --  фамилия ученика
      * @param magicLevel   --  уровень волшебства
      * @param trLevel      --  уровень трансгресии
      */
-    public Hogwarts(String name, String surname, int magicLevel, int trLevel) {
+    public Hogwarts(String name, int magicLevel, int trLevel) {
         this.name = name;
-        this.surname = surname;
         this.magicLevel = magicLevel;
         this.trLevel = trLevel;
     }
 
-    public void compareWith(Hogwarts student) {
-        if (getMagicLevel() > student.getMagicLevel()) {
-            System.out.println(getName() + " имеет силу магии больше, чем у " + student.getName());
-        } else if (getMagicLevel() == student.getMagicLevel()) {
-            System.out.println("Уровень равен ");
-        } else {
-            System.out.println(student.getName() + " имеет силу магии больше, чем у" + getName());
-        }
-
-        if (getTrLevel() > student.getTrLevel()) {
-            System.out.println(getName() + " диссипирует на большее расстояние, чем " + student.getName());
-        } else if (getMagicLevel() == student.getMagicLevel()) {
-            System.out.println("размер ЧСП равен ");
-        } else {
-            System.out.println(student.getName() + " камингаутерит чаще, чем " + getName());
-        }
-
+    abstract int calculateSpecificScore();
+    abstract void printCompareOfStudents(Hogwarts best, Hogwarts worst);
+    private int calculateGeneralScore() {
+        return this.magicLevel + this.trLevel;
     }
-    
+
+    public void compare(Hogwarts hogwarts) {
+        if (this.getClass().equals(hogwarts.getClass())) {
+            this.compareBySpecific(hogwarts);
+        } else {
+            this.compareByGeneral(hogwarts);
+        }
+    }
+
+    private void compareBySpecific(Hogwarts hogwarts) {
+        int thisScore = this.calculateGeneralScore() + this.calculateSpecificScore();
+        int otherScore = hogwarts.calculateGeneralScore() + hogwarts.calculateSpecificScore();
+
+        if (thisScore > otherScore) {
+            printCompareOfStudents(this, hogwarts);
+        } else if (thisScore < otherScore) {
+            printCompareOfStudents(hogwarts, this);
+        } else {
+            System.out.println("Ученики одного факультета равны по силе");
+        }
+    }
+
+    private void compareByGeneral(Hogwarts hogwarts) {
+        int thisScore = this.calculateGeneralScore();
+        int otherScore = hogwarts.calculateGeneralScore();
+
+        if (thisScore > otherScore) {
+            System.out.println(String.format("Ученик %s сильнее ученика %s", this.name, hogwarts.name));
+        } else if (thisScore < otherScore) {
+            System.out.println(String.format("Ученик %s сильнее ученика %s", hogwarts.name, this.name));
+        } else {
+            System.out.println("Ученики равны по силе");
+        }
+    }
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public int getMagicLevel() {
-        return magicLevel;
-    }
-
-    public void setMagicLevel(int magicLevel) {
-        this.magicLevel = magicLevel;
-    }
-
-    public int getTrLevel() {
-        return trLevel;
-    }
-
-    public void setTrLevel(int trLevel) {
-        this.trLevel = trLevel;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Hogwarts hogwarts)) return false;
-        return getMagicLevel() == hogwarts.getMagicLevel() && getTrLevel() == hogwarts.getTrLevel() && Objects.equals(getName(), hogwarts.getName()) && Objects.equals(getSurname(), hogwarts.getSurname());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getSurname(), getMagicLevel(), getTrLevel());
-    }
-
     @Override
     public String toString() {
-        return "Hogwarts{" +
-                "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", magicLevel=" + magicLevel +
-                ", trLevel=" + trLevel +
+        return "Hogwarts {" +
+                "name = '" + name + '\'' +
+                ", magicLevel = " + magicLevel +
+                ", trLevel = " + trLevel +
                 '}';
     }
 }
